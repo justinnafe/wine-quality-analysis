@@ -1,0 +1,116 @@
+---
+title: "Wine Quality Prediction"
+author: "Justin Nafe"
+date: "Friday, April 24, 2015"
+output: html_document
+---
+
+##Summary
+
+For this analysis, I am predicting the quality of white wine based on physiochemical characteristics of white wine. The dataset was prepared with samples of white vinho verde wine from the north of Portugal [Cortez et al., 2009] and is available at https://archive.ics.uci.edu/ml/datasets/Wine+Quality.
+
+The output in the original dataset is the quality on a scale of 0 to 10, where 0 is poor and 10 is good. For this analysis, we will convert those quality values to a scale of 0 to 2, where 0 is poor, 1 is normal, and 2 is good.
+
+###Input variables (based on physicochemical tests): 
+1 - fixed acidity 
+2 - volatile acidity 
+3 - citric acid 
+4 - residual sugar 
+5 - chlorides 
+6 - free sulfur dioxide 
+7 - total sulfur dioxide 
+8 - density 
+9 - pH 
+10 - sulphates 
+11 - alcohol 
+
+###Output variable (based on sensory data): 
+12 - quality (score between 0 and 10)
+
+
+
+##Data Analysis
+
+```{r}
+library(caret)
+library(randomForest)
+library(Boruta)
+
+whitewine <- read.csv("http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv", sep=";")
+head(whitewine)
+dim(whitewine)
+
+str(whitewine)
+unique(whitewine$quality)
+# since there are only quality values in the range of 3 to 9
+whitewine$quality <- factor(whitewine$quality)
+summary(whitewine)
+unique(whitewine$quality)
+
+```
+
+##Transformation
+
+```{r}
+
+qualColWhite <- grep("quality", colnames(whitewine))
+whitewine[,-qualColWhite] <- log(whitewine[,-qualColWhite] + 1 - min(whitewine[,-qualColWhite]))
+
+summary(whitewine)
+inTrainWhite <- createDataPartition(y=whitewine$quality,
+                              p=0.70, list=FALSE)
+
+training <- whitewine[inTrainWhite,]
+testing <- whitewine[-inTrainWhite,]
+
+dim(training)
+```
+
+##Model
+
+```{r}
+set.seed(78490)
+#important <- Boruta(quality~., data=training)
+#important
+set.seed(78490)
+#model <- train(quality~., 
+#               data=training[, c(important$finalDecision != "Rejected", TRUE)])
+#model
+set.seed(78490)
+model <- train(quality ~ ., data = training)
+model
+```
+
+###Feature Selection
+
+```{r}
+imp <- sort(t(varImp(model$finalModel)),index=TRUE,decreasing=TRUE)
+imp
+#The top 5 predictors are 
+colnames(training[,c(imp[[2]][1], imp[[2]][2], imp[[2]][3], imp[[2]][4], imp[[2]][5])])
+```
+
+##Prediction
+
+```{r}
+pred <- predict(model, testing)
+missClass = function(values,prediction){
+  sum(prediction == values) / length(values)
+}
+```
+
+Test accuracy over the test set
+
+```{r}
+missClass(as.numeric(testing$quality), as.numeric(predict(model, testing)))
+```
+
+Test accuracy over the training set
+
+```{r}
+missClass(as.numeric(training$quality), as.numeric(predict(model, training)))
+```
+
+##References
+P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. 
+Modeling wine preferences by data mining from physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553, 2009
