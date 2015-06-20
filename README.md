@@ -1,5 +1,7 @@
 # wine-quality-analysis
-Wine quality analysis; good, bad, neutral using physicochemical features
+Wine quality analysis; good, bad, neutral using physicochemical features.
+
+The scaled down shiny app can be viewed at https://justinnafe.shinyapps.io/WineQualityAnalysis
 
 # References
 P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. 
