@@ -45,4 +45,4 @@ Shiny app
 https://justinnafe.shinyapps.io/WineQualityAnalysis
 
 White Wine Quality Analysis
-http://justinnafe.github.io/wine-quality-analysis/wineQualityAnalysis.html
+http://justinnafe.github.io/wine-quality-analysis/wineQualityAnalysis.html 
