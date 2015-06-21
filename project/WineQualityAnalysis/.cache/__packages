@@ -1,0 +1,11 @@
+base
+devtools
+slidify
+lattice
+ggplot2
+caret
+randomForest
+e1071
+survival
+gbm
+plyr
