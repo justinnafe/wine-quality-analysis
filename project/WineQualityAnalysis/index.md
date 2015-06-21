@@ -41,3 +41,8 @@ knit        : slidify::knit2slides
 P. Cortez, A. Cerdeira, F. Almeida, T. Matos and J. Reis. 
 Modeling wine preferences by data mining from physicochemical properties. In Decision Support Systems, Elsevier, 47(4):547-553, 2009
 
+Shiny app
+https://justinnafe.shinyapps.io/WineQualityAnalysis
+
+White Wine Quality Analysis
+http://justinnafe.github.io/wine-quality-analysis/wineQualityAnalysis.html
